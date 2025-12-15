@@ -181,3 +181,4 @@ module_exit(ax_pcie_p2p_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Axera");
+MODULE_DESCRIPTION("AXERA PCIE P2P DRIVER");

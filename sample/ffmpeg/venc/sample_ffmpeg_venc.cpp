@@ -24,6 +24,7 @@
 #include <string>
 #include <iostream>
 #include "cmdline.h"
+#include "axcl_crashdump.h"
 #else
 #include <unistd.h>
 #endif
@@ -113,6 +114,10 @@ end:
 }
 
 int main(int argc, char *argv[]) {
+#ifdef WINDOWS
+    // Initialize crash dump functionality on Windows
+    axclInitializeCrashDump(nullptr);
+#endif
     int size, err;
     FILE *fin = NULL, *fout = NULL;
     AVFrame *sw_frame = NULL, *hw_frame = NULL;
@@ -362,5 +367,8 @@ close:
     avcodec_free_context(&avctx);
     av_buffer_unref(&hw_device_ctx);
 
+#ifdef WINDOWS
+    axclUninitializeCrashDump();
+#endif
     return err;
 }

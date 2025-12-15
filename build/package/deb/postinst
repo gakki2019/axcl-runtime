@@ -13,6 +13,12 @@ if [ "$ARCH" = "arm64" ]; then
 elif [ "$ARCH" = "riscv64" ]; then
     ARCH=riscv
     DRV_BUILT_PATH=/usr/src/axcl/out/axcl_linux_riscv/ko
+elif [ "$ARCH" = "loong64" ]; then
+    ARCH=loongarch64
+    DRV_BUILT_PATH=/usr/src/axcl/out/axcl_linux_loongarch64/ko
+elif [ "$ARCH" = "loongarch64" ]; then
+    ARCH=loongarch64od
+    DRV_BUILT_PATH=/usr/src/axcl/out/axcl_linux_loongarch64od/ko
 else
     ARCH=x86
     DRV_BUILT_PATH=/usr/src/axcl/out/axcl_linux_x86/ko

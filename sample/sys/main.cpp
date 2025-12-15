@@ -15,6 +15,9 @@
 #include "../utils/logger.h"
 #include "axcl.h"
 #include "cmdline.h"
+#ifdef WINDOWS
+#include "axcl_crashdump.h"
+#endif
 
 static int sample_sys_alloc_free();
 static int sample_sys_alloc_cache_free();
@@ -23,6 +26,10 @@ static int sample_sys_private_pool();
 static int sample_sys_link();
 
 int main(int argc, char *argv[]) {
+#ifdef WINDOWS
+    // Initialize crash dump functionality on Windows
+    axclInitializeCrashDump(nullptr);
+#endif
     cmdline::parser a;
     a.add<uint32_t>("device", 'd', "device index from 0 to connected device num - 1", false, 0, cmdline::range(0, AXCL_MAX_DEVICE_COUNT - 1));
     a.add<std::string>("json", '\0', "axcl.json path", false, "./axcl.json");
@@ -67,6 +74,9 @@ int main(int argc, char *argv[]) {
 
     axclrtResetDevice(device_id);
     axclFinalize();
+#ifdef WINDOWS
+    axclUninitializeCrashDump();
+#endif
     return 0;
 }
 

@@ -13,6 +13,12 @@ FFMPEG_INC_PATH=$(CUR_PATH)/x64/
 else ifeq ($(HOST),riscv)
 FFMPEG_OUT_PATH=$(CUR_PATH)/out/riscv
 FFMPEG_INC_PATH=$(CUR_PATH)/riscv/
+else ifeq ($(HOST),loongarch64)
+FFMPEG_OUT_PATH=$(CUR_PATH)/out/loongarch64
+FFMPEG_INC_PATH=$(CUR_PATH)/loongarch64/
+else ifeq ($(HOST),loongarch64od)
+FFMPEG_OUT_PATH=$(CUR_PATH)/out/loongarch64od
+FFMPEG_INC_PATH=$(CUR_PATH)/loongarch64od/
 else
 FFMPEG_OUT_PATH=$(CUR_PATH)/out/arm64
 FFMPEG_INC_PATH=$(CUR_PATH)/arm64/

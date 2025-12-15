@@ -22,6 +22,10 @@ ccflags-y               += -DAXCL_MODULE_NAME=\"$(MODULE_NAME)\"
 
 ifeq ($(HOST),x86)
 SRCS                    := ax_mmb.c version.c
+else ifeq ($(HOST),loongarch64)
+SRCS                    := ax_mmb.c version.c
+else ifeq ($(HOST),loongarch64od)
+SRCS                    := ax_mmb.c version.c
 else ifeq ($(HOST),riscv)
 SRCS                    := ax_mmb.c version.c
 #EXTRA_CFLAGS            += -march=rv64gc         # some riscv soc not support zicbom

@@ -532,7 +532,7 @@ static void _ax_mmb_invalidate_dcache_area(unsigned long addr, unsigned long siz
 	ax_dcache_inval_poc(addr, addr + size);
 #elif defined(CONFIG_RISCV)
 	riscv_invalidate_dcache_range(addr, size);
-#elif defined(CONFIG_X86)
+#elif defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
 #endif
 }
 
@@ -548,7 +548,7 @@ static void ax_mmb_flush_dcache_area(unsigned long kvirt, unsigned long length)
 	ax_dcache_clean_inval_poc(kvirt, kvirt + length);
 #elif defined(CONFIG_RISCV)
 	riscv_flush_dcache_range(kvirt, length);
-#elif defined(CONFIG_X86)
+#elif defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
 #endif
 }
 
@@ -676,7 +676,7 @@ static pgprot_t ax_mmb_mmap_pgprot_cached(pgprot_t prot)
 #if defined(CONFIG_ARM64)
 	return __pgprot(pgprot_val(prot)
 			| PTE_VALID | PTE_DIRTY | PTE_AF);
-#elif defined(CONFIG_X86)
+#elif defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
 	return __pgprot(pgprot_val(prot));
 #elif defined(CONFIG_RISCV)
 	return pgprot_writecombine(prot);
@@ -690,7 +690,7 @@ static pgprot_t ax_mmb_mmap_pgprot_nocached(pgprot_t prot)
 {
 #if defined(CONFIG_ARM64)
 	return pgprot_writecombine(prot);
-#elif defined(CONFIG_X86)
+#elif defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
 	return __pgprot(pgprot_val(prot));
 #elif defined(CONFIG_RISCV)
 	return pgprot_writecombine(prot);
@@ -726,7 +726,7 @@ static int ax_mmb_mmap(struct file *file, struct vm_area_struct *vma)
 			   sg_dma_len(sg),
 			   ax_mmb->mem_cached);
 
-#if defined(CONFIG_X86)
+#if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
 		return dma_mmap_attrs(ax_mmb->dev, vma, sg_virt(sg), sg_dma_address(sg), sg_dma_len(sg), 0);
 #else
 		pfn_start = dma_to_phys(ax_mmb->dev, sg_dma_address(sg)) >> PAGE_SHIFT;

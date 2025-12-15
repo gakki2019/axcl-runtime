@@ -16,9 +16,16 @@
 #include "cmdline.h"
 #include "logger.h"
 #include "signal_handler.hpp"
+#ifdef WINDOWS
+#include "axcl_crashdump.h"
+#endif
 
 
 int main(int argc, char *argv[]) {
+#ifdef WINDOWS
+    // Initialize crash dump functionality on Windows
+    axclInitializeCrashDump(nullptr);
+#endif
     SAMPLE_LOG_I("============== %s sample started %s %s =============", AXCL_BUILD_VERSION, __DATE__, __TIME__);
 
     signal_handler signal;
@@ -149,6 +156,9 @@ int main(int argc, char *argv[]) {
 
     /* deinit axcl */
     axclFinalize();
+#ifdef WINDOWS
+    axclUninitializeCrashDump();
+#endif
 
     SAMPLE_LOG_I("============== %s sample exited %s %s ==============\n", AXCL_BUILD_VERSION, __DATE__, __TIME__);
     return 0;

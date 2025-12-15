@@ -78,3 +78,48 @@ cmake -DCMAKE_BUILD_TYPE=Release                \
       ../cmake
 cmake --build . --target install
 popd
+
+mkdir -p build_loongarch64 && pushd build_loongarch64
+cmake -DCMAKE_BUILD_TYPE=Release                                \
+      -DCMAKE_SYSTEM_NAME=Linux                                 \
+      -DCMAKE_SYSTEM_PROCESSOR=loongarch64                      \
+      -DCMAKE_C_COMPILER="loongarch64-unknown-linux-gnu-gcc"    \
+      -DCMAKE_CXX_COMPILER="loongarch64-unknown-linux-gnu-g++"  \
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER                 \
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY                  \
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY                  \
+      -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON                 \
+      -Dprotobuf_BUILD_PROTOC_BINARIES:BOOL=ON                  \
+      -Dprotobuf_BUILD_SHARED_LIBS:BOOL=OFF                     \
+      -Dprotobuf_BUILD_TESTS:BOOL=OFF                           \
+      -Dprotobuf_DISABLE_RTTI:BOOL=ON                           \
+      -Dprotobuf_INSTALL:BOOL=ON                                \
+      -Dprotobuf_WITH_ZLIB:BOOL=OFF                             \
+      -DCMAKE_INSTALL_PREFIX=../install/loongarch64             \
+      ../cmake
+cmake --build . --target install
+popd
+
+mkdir -p build_loongarch64od && pushd build_loongarch64od
+cmake -DCMAKE_BUILD_TYPE=Release                                \
+      -DCMAKE_SYSTEM_NAME=Linux                                 \
+      -DCMAKE_SYSTEM_PROCESSOR=loongarch                        \
+      -DCMAKE_C_COMPILER="loongarch64-linux-gnu-gcc"            \
+      -DCMAKE_CXX_COMPILER="loongarch64-linux-gnu-g++"          \
+      -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER                 \
+      -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY                  \
+      -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY                  \
+      -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON                 \
+      -Dprotobuf_BUILD_PROTOC_BINARIES:BOOL=ON                  \
+      -Dprotobuf_BUILD_SHARED_LIBS:BOOL=OFF                     \
+      -Dprotobuf_BUILD_TESTS:BOOL=OFF                           \
+      -Dprotobuf_DISABLE_RTTI:BOOL=ON                           \
+      -Dprotobuf_INSTALL:BOOL=ON                                \
+      -Dprotobuf_WITH_ZLIB:BOOL=OFF                             \
+      -DCMAKE_INSTALL_PREFIX=../install/loongarch64od           \
+      ../cmake
+cmake --build . --target install
+popd
+
+
+

@@ -292,6 +292,164 @@ make_x86() {
     make -j32 && make install
 }
 
+make_loongarch64() {
+    cd ${FFMPEG_SRC}
+
+    if [ "$DBG" = "yes" ] ; then
+        echo "configure ffmpeg with debug info"
+        ./configure \
+        --prefix=${OUTPUT_PATH} \
+        --enable-cross-compile \
+        --cross-prefix=${CROSS} \
+        --arch=loongarch64 \
+        --host-os=linux \
+        --target-os=linux \
+        --cc=${CROSS}gcc \
+        --enable-shared \
+        --disable-static \
+        --enable-gpl \
+        --enable-muxer=mp4 \
+        --enable-muxer=flv \
+        --enable-muxer=h264 \
+        --enable-muxer=hevc \
+        --enable-demuxer=flv \
+        --enable-demuxer=h264 \
+        --enable-demuxer=hevc \
+        --enable-demuxer=rtsp \
+        --enable-parser=hevc \
+        --enable-ffmpeg \
+        --enable-swscale  \
+        --disable-avdevice \
+        --enable-encoders \
+        --enable-filters \
+        --enable-axmm \
+        --enable-cross-compile \
+        --disable-large-tests \
+        --disable-doc \
+        --disable-asm \
+        --disable-stripping \
+        --enable-debug \
+        --extra-cflags="-I$AXCL_INC_PATH" \
+        --extra-ldflags="-ldl"
+    else
+        echo "configure ffmpeg"
+        ./configure \
+        --prefix=${OUTPUT_PATH} \
+        --enable-cross-compile \
+        --cross-prefix=${CROSS} \
+        --arch=loongarch64 \
+        --host-os=linux \
+        --target-os=linux \
+        --cc=${CROSS}gcc \
+        --enable-shared \
+        --disable-static \
+        --enable-gpl \
+        --enable-muxer=mp4 \
+        --enable-muxer=flv \
+        --enable-muxer=h264 \
+        --enable-muxer=hevc \
+        --enable-demuxer=flv \
+        --enable-demuxer=h264 \
+        --enable-demuxer=hevc \
+        --enable-demuxer=rtsp \
+        --enable-parser=hevc \
+        --enable-ffmpeg \
+        --enable-swscale  \
+        --disable-avdevice \
+        --enable-encoders \
+        --enable-filters \
+        --enable-axmm \
+        --enable-cross-compile \
+        --disable-large-tests \
+        --disable-doc \
+        --disable-logging \
+        --enable-pic \
+        --extra-cflags="-I$AXCL_INC_PATH" \
+        --extra-ldflags="-ldl -Wl,--build-id"
+    fi
+
+    make -j32 && make install
+}
+
+
+make_loongarch64od() {
+    cd ${FFMPEG_SRC}
+
+    if [ "$DBG" = "yes" ] ; then
+        echo "configure ffmpeg with debug info"
+        ./configure \
+        --prefix=${OUTPUT_PATH} \
+        --enable-cross-compile \
+        --cross-prefix=${CROSS} \
+        --arch=loongarch \
+        --host-os=linux \
+        --target-os=linux \
+        --cc=${CROSS}gcc \
+        --enable-shared \
+        --disable-static \
+        --enable-gpl \
+        --enable-muxer=mp4 \
+        --enable-muxer=flv \
+        --enable-muxer=h264 \
+        --enable-muxer=hevc \
+        --enable-demuxer=flv \
+        --enable-demuxer=h264 \
+        --enable-demuxer=hevc \
+        --enable-demuxer=rtsp \
+        --enable-parser=hevc \
+        --enable-ffmpeg \
+        --enable-swscale  \
+        --disable-avdevice \
+        --enable-encoders \
+        --enable-filters \
+        --enable-axmm \
+        --enable-cross-compile \
+        --disable-large-tests \
+        --disable-doc \
+        --disable-asm \
+        --disable-stripping \
+        --enable-debug \
+        --extra-cflags="-I$AXCL_INC_PATH" \
+        --extra-ldflags="-ldl"
+    else
+        echo "configure ffmpeg"
+        ./configure \
+        --prefix=${OUTPUT_PATH} \
+        --enable-cross-compile \
+        --cross-prefix=${CROSS} \
+        --arch=loongarch \
+        --host-os=linux \
+        --target-os=linux \
+        --cc=${CROSS}gcc \
+        --enable-shared \
+        --disable-static \
+        --enable-gpl \
+        --enable-muxer=mp4 \
+        --enable-muxer=flv \
+        --enable-muxer=h264 \
+        --enable-muxer=hevc \
+        --enable-demuxer=flv \
+        --enable-demuxer=h264 \
+        --enable-demuxer=hevc \
+        --enable-demuxer=rtsp \
+        --enable-parser=hevc \
+        --enable-ffmpeg \
+        --enable-swscale  \
+        --disable-avdevice \
+        --enable-encoders \
+        --enable-filters \
+        --enable-axmm \
+        --enable-cross-compile \
+        --disable-large-tests \
+        --disable-doc \
+        --disable-logging \
+        --enable-pic \
+        --extra-cflags="-I$AXCL_INC_PATH" \
+        --extra-ldflags="-ldl -Wl,--build-id"
+    fi
+
+    make -j32 && make install
+}
 
 clean() {
     cd ${FFMPEG_SRC}
@@ -309,6 +467,10 @@ else
         make_x86
     elif [ "$HOST" = "riscv" ] ; then
         make_riscv
+    elif [ "$HOST" = "loongarch64" ] ; then
+        make_loongarch64
+    elif [ "$HOST" = "loongarch64od" ] ; then
+        make_loongarch64od
     else
         make_arm64
     fi

@@ -9,10 +9,10 @@ KERNEL_BUILD    ?= $(KERNEL_DIR)/build
 DEBUG_OUT_PATH  := $(MOD_TARGET_PATH)/debug_ko
 
 EXT_FLAG        ?=
-EXTRA_CFLAGS    += -Wno-error=date-time -Wno-date-time
 KCFLAGS         += -DIS_THIRD_PARTY_PLATFORM
 ccflags-y       += -DAXCL_BUILD_VERSION=\"$(SDK_VERSION)\"
 ccflags-y       += -DCOMPILER_USERNAME=$(COMPILER_USERNAME_STR)
+ccflags-y       += -Wno-error=date-time -Wno-date-time
 
 .PHONY: modules install clean
 .NOTPARALLEL: clean install

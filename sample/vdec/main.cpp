@@ -26,6 +26,9 @@
 #include "utils/def.h"
 #include "utils/logger.h"
 #include "utils/person_test_ov2_640x360_2frames.mp4.h"
+#ifdef WINDOWS
+#include "axcl_crashdump.h"
+#endif
 
 #define MAX_STREAM_COUNT (32)
 static int g_exit = 0;
@@ -41,6 +44,10 @@ static void sample_get_decoded_image_thread(AX_VDEC_GRP grp, int32_t device_id, 
 static AX_S32 sample_vdec_set_attr(SAMPLE_VDEC_ATTR *vdec_attr, int32_t chn_id, int32_t w, int32_t h);
 
 int main(int argc, char *argv[]) {
+#ifdef WINDOWS
+    // Initialize crash dump functionality on Windows
+    axclInitializeCrashDump(nullptr);
+#endif
     SAMPLE_LOG_I("============== %s sample started %s %s ==============\n", AXCL_BUILD_VERSION, __DATE__, __TIME__);
 
     signal(SIGINT, signal_handler);
@@ -254,6 +261,9 @@ int main(int argc, char *argv[]) {
     axclFinalize();
 
     SAMPLE_LOG_I("============== %s sample exited %s %s ==============\n", AXCL_BUILD_VERSION, __DATE__, __TIME__);
+#ifdef WINDOWS
+    axclUninitializeCrashDump();
+#endif
     return 0;
 }
 

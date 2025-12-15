@@ -12,12 +12,12 @@ cmake --build . --target install
 popd
 
 mkdir -p build_riscv && pushd build_riscv
-cmake -DCMAKE_BUILD_TYPE=Release                      \
-      -DCMAKE_SYSTEM_NAME=Linux                       \
-      -DCMAKE_SYSTEM_PROCESSOR=riscv                  \
+cmake -DCMAKE_BUILD_TYPE=Release                        \
+      -DCMAKE_SYSTEM_NAME=Linux                         \
+      -DCMAKE_SYSTEM_PROCESSOR=riscv                    \
       -DCMAKE_C_COMPILER="riscv64-linux-gnu-gcc"        \
       -DCMAKE_CXX_COMPILER="riscv64-linux-gnu-g++"      \
-      -DCMAKE_INSTALL_PREFIX=../install/riscv         \
+      -DCMAKE_INSTALL_PREFIX=../install/riscv           \
       ..
 cmake --build . --target install
 popd
@@ -25,6 +25,28 @@ popd
 mkdir -p build_x64 && pushd build_x64
 cmake -DCMAKE_BUILD_TYPE=Release                \
       -DCMAKE_INSTALL_PREFIX=../install/x64     \
+      ..
+cmake --build . --target install
+popd
+
+mkdir -p build_loongarch64 && pushd build_loongarch64
+cmake -DCMAKE_BUILD_TYPE=Release                                \
+      -DCMAKE_SYSTEM_NAME=Linux                                 \
+      -DCMAKE_SYSTEM_PROCESSOR=loongarch64                      \
+      -DCMAKE_C_COMPILER="loongarch64-unknown-linux-gnu-gcc"    \
+      -DCMAKE_CXX_COMPILER="loongarch64-unknown-linux-gnu-g++"  \
+      -DCMAKE_INSTALL_PREFIX=../install/loongarch64             \
+      ..
+cmake --build . --target install
+popd
+
+mkdir -p build_loongarch64od && pushd build_loongarch64od
+cmake -DCMAKE_BUILD_TYPE=Release                                \
+      -DCMAKE_SYSTEM_NAME=Linux                                 \
+      -DCMAKE_SYSTEM_PROCESSOR=loongarch                        \
+      -DCMAKE_C_COMPILER="loongarch64-linux-gnu-gcc"            \
+      -DCMAKE_CXX_COMPILER="loongarch64-linux-gnu-g++"          \
+      -DCMAKE_INSTALL_PREFIX=../install/loongarch64od           \
       ..
 cmake --build . --target install
 popd

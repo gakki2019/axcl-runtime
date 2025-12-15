@@ -12,8 +12,15 @@
 #include "../utils/logger.h"
 #include "axcl.h"
 #include "cmdline.h"
+#ifdef WINDOWS
+#include "axcl_crashdump.h"
+#endif
 
 int main(int argc, char *argv[]) {
+#ifdef WINDOWS
+    // Initialize crash dump functionality on Windows
+    axclInitializeCrashDump(nullptr);
+#endif
     SAMPLE_LOG_I("============== APP(%s) Started %s %s ==============\n", AXCL_BUILD_VERSION, __DATE__, __TIME__);
 
     cmdline::parser a;
@@ -54,5 +61,8 @@ int main(int argc, char *argv[]) {
     axclFinalize();
 
     SAMPLE_LOG_I("============== APP(%s) Exited %s %s ==============\n", AXCL_BUILD_VERSION, __DATE__, __TIME__);
+#ifdef WINDOWS
+    axclUninitializeCrashDump();
+#endif
     return 0;
 }

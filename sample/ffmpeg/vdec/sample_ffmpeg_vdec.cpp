@@ -21,6 +21,7 @@
 
 #ifdef WINDOWS
 #include "cmdline.h"
+#include "axcl_crashdump.h"
 #else
 #include <unistd.h>
 extern "C" {
@@ -90,8 +91,9 @@ static enum AVPixelFormat get_format(AVCodecContext *s, const enum AVPixelFormat
 
 int main(int argc, char *argv[])
 {
-
 #ifdef WINDOWS
+    // Initialize crash dump functionality on Windows
+    axclInitializeCrashDump(nullptr);
     cmdline::parser parser;
 #else
     AX_S32 c;
@@ -437,5 +439,8 @@ ERR_RET2:
 ERR_RET1:
     avformat_free_context(pstAvFmtCtx);
 ERR_RET:
+#ifdef WINDOWS
+    axclUninitializeCrashDump();
+#endif
     return s32Ret;
 }

@@ -195,6 +195,10 @@ static int axcl_heartbeat_recv_timeout(struct device_heart_packet *hbeat, int ti
 
 	ktime_get_ts64(&tv_start);
 	while (1) {
+		if (kthread_should_stop()) {
+			break;
+		}
+
 		if (hbeat->timestamp != hbeat->last_timestamp) {
 			hbeat->last_timestamp = hbeat->timestamp;
 			ret = 0;
@@ -1668,6 +1672,7 @@ static void __exit axcl_pcie_host_exit(void)
 			wake_up(&heart_waitqueue[target]);
 			kthread_stop(heartbeat[i]);
 		}
+
 		host_reset_device(target);
 	}
 
@@ -1681,9 +1686,12 @@ module_exit(axcl_pcie_host_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Axera");
+MODULE_DESCRIPTION("AXCL HOST DRIVER");
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 0, 0)
 #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 13, 0)
 MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
 #else
 MODULE_IMPORT_NS("VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver");
+#endif
 #endif

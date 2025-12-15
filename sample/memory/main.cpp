@@ -16,6 +16,9 @@
 #include "cmdline.h"
 #include "logger.h"
 #include "signal_handler.hpp"
+#ifdef WINDOWS
+#include "axcl_crashdump.h"
+#endif
 
 static int32_t setup(const std::string& json, int32_t &device_id);
 static void cleanup(int32_t device_id);
@@ -28,6 +31,10 @@ static void cleanup(int32_t device_id);
  *       host_mem[1] <----------------------------------|
  */
 int main(int argc, char *argv[]) {
+#ifdef WINDOWS
+    // Initialize crash dump functionality on Windows
+    axclInitializeCrashDump(nullptr);
+#endif
     SAMPLE_LOG_I("============== %s sample started %s %s ==============\n", AXCL_BUILD_VERSION, __DATE__, __TIME__);
 
     cmdline::parser a;
@@ -103,6 +110,9 @@ __END__:
     cleanup(device_id);
 
     SAMPLE_LOG_I("============== %s sample exited %s %s ==============\n", AXCL_BUILD_VERSION, __DATE__, __TIME__);
+#ifdef WINDOWS
+    axclUninitializeCrashDump();
+#endif
     return 0;
 }
 

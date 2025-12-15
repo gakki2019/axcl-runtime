@@ -44,6 +44,9 @@
 #include "utils/logger.h"
 #include "utils/person_test_ov2_640x360_2frames.mp4.h"
 #include "os.hpp"
+#ifdef WINDOWS
+#include "axcl_crashdump.h"
+#endif
 
 static int32_t quit = 0;
 static void handler(int s) {
@@ -85,6 +88,10 @@ static void handle_down_streaming_nalu_frame(const struct stream_data *nalu, uin
 static void handle_encoded_stream_callback(axcl_ppl ppl, const axcl_ppl_encoded_stream *stream, AX_U64 userdata);
 
 int main(int argc, char *argv[]) {
+#ifdef WINDOWS
+    // Initialize crash dump functionality on Windows
+    axclInitializeCrashDump(nullptr);
+#endif
     const int32_t pid = static_cast<int32_t>(getpid());
     SAMPLE_LOG_I("============== %s sample started %s %s pid %d ==============\n", AXCL_BUILD_VERSION, __DATE__, __TIME__, pid);
     signal(SIGINT, handler);
@@ -312,6 +319,9 @@ int main(int argc, char *argv[]) {
 
     SAMPLE_LOG_I("total transcoded frames: %lu", (unsigned long)ppl_info->frame_count.load());
     SAMPLE_LOG_I("============== %s sample exited %s %s pid %d ==============\n", AXCL_BUILD_VERSION, __DATE__, __TIME__, pid);
+#ifdef WINDOWS
+    axclUninitializeCrashDump();
+#endif
     return 0;
 }
 

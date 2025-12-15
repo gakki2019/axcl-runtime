@@ -9,6 +9,7 @@
  **************************************************************************************************/
 
 #include "axclite_msys.hpp"
+#include <stdio.h>
 
 extern "C" axclError axclrtControlExecuteShellCmd(const char* cmd, const char* const args[], size_t argc, const char** output);
 

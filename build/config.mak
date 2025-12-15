@@ -17,6 +17,12 @@ include $(AXCL_BUILD_PATH)/projects/$(NAME)_$(OS)_$(HOST)_config.mak
 else ifeq ($(host),riscv)
 HOST                := riscv
 include $(AXCL_BUILD_PATH)/projects/$(NAME)_$(OS)_$(HOST)_config.mak
+else ifeq ($(host),loongarch64)
+HOST                := loongarch64
+include $(AXCL_BUILD_PATH)/projects/$(NAME)_$(OS)_$(HOST)_config.mak
+else ifeq ($(host),loongarch64od)
+HOST                := loongarch64od
+include $(AXCL_BUILD_PATH)/projects/$(NAME)_$(OS)_$(HOST)_config.mak
 else ifeq ($(host),)
 HOST                := ax650
 include $(AXCL_BUILD_PATH)/projects/$(NAME)_$(OS)_$(HOST)_config.mak

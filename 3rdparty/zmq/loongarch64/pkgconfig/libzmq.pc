@@ -1,0 +1,12 @@
+prefix=/home/jingxiaoping/archive/longarch64/libzmq-4.3.4/install/loongarch64
+exec_prefix=/home/jingxiaoping/archive/longarch64/libzmq-4.3.4/install/loongarch64
+libdir=/home/jingxiaoping/archive/longarch64/libzmq-4.3.4/install/loongarch64/lib
+includedir=/home/jingxiaoping/archive/longarch64/libzmq-4.3.4/install/loongarch64/include
+
+Name: libzmq
+Description: 0MQ c++ library
+Version: 4.3.4
+Libs: -L${libdir} -lzmq
+Libs.private: -lstdc++  -lsodium -lrt
+Requires.private: 
+Cflags: -I${includedir} 

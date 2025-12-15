@@ -480,3 +480,4 @@ module_exit(ax_pcie_msg_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Axera");
+MODULE_DESCRIPTION("AXERA PCIE MSG DRIVER");

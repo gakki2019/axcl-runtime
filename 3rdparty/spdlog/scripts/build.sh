@@ -32,6 +32,30 @@ cmake -DCMAKE_BUILD_TYPE=Release                \
 cmake --build . --target install
 popd
 
+mkdir -p build_loongarch64 && pushd build_loongarch64
+cmake -DCMAKE_BUILD_TYPE=Release                                \
+      -DCMAKE_SYSTEM_NAME=Linux                                 \
+      -DCMAKE_SYSTEM_PROCESSOR=loongarch64                      \
+      -DSPDLOG_BUILD_SHARED=ON                                  \
+      -DCMAKE_C_COMPILER="loongarch64-unknown-linux-gnu-gcc"    \
+      -DCMAKE_CXX_COMPILER="loongarch64-unknown-linux-gnu-g++"  \
+      -DCMAKE_INSTALL_PREFIX=../install/loongarch64             \
+      ..
+cmake --build . --target install
+popd
+
+mkdir -p build_loongarch64od && pushd build_loongarch64od
+cmake -DCMAKE_BUILD_TYPE=Release                                \
+      -DCMAKE_SYSTEM_NAME=Linux                                 \
+      -DCMAKE_SYSTEM_PROCESSOR=loongarch                        \
+      -DSPDLOG_BUILD_SHARED=ON                                  \
+      -DCMAKE_C_COMPILER="loongarch64-linux-gnu-gcc"            \
+      -DCMAKE_CXX_COMPILER="loongarch64-linux-gnu-g++"          \
+      -DCMAKE_INSTALL_PREFIX=../install/loongarch64od           \
+      ..
+cmake --build . --target install
+popd
+
 # windows:
 # change CMakeLists.txt:
 #    set_target_properties(spdlog PROPERTIES OUTPUT_NAME "libspdlog")

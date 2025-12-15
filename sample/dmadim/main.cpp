@@ -18,6 +18,9 @@
 #include "../utils/logger.h"
 #include "axcl.h"
 #include "cmdline.h"
+#ifdef WINDOWS
+#include "axcl_crashdump.h"
+#endif
 
 #define IS_AXCL_UT_IMAGE(image) (0 == strcmp(image, "axcl.ut.image"))
 static int dma_copy();
@@ -26,6 +29,10 @@ static int dma_checksum();
 static int dma_copy2d(const char *image, uint32_t width, uint32_t height);
 
 int main(int argc, char *argv[]) {
+#ifdef WINDOWS
+    // Initialize crash dump functionality on Windows
+    axclInitializeCrashDump(nullptr);
+#endif
     SAMPLE_LOG_I("============== %s sample started %s %s ==============\n", AXCL_BUILD_VERSION, __DATE__, __TIME__);
 
     cmdline::parser a;
@@ -79,6 +86,9 @@ int main(int argc, char *argv[]) {
     axclFinalize();
 
     SAMPLE_LOG_I("============== %s sample exited %s %s ==============\n", AXCL_BUILD_VERSION, __DATE__, __TIME__);
+#ifdef WINDOWS
+    axclUninitializeCrashDump();
+#endif
     return 0;
 }
 
