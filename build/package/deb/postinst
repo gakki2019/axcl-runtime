@@ -1,0 +1,100 @@
+#!/bin/sh
+set -e
+
+DRV_SOURCE_PATH=/usr/src/axcl/drv/pcie/driver
+DRV_INSTALL_PATH=/lib/modules/$(uname -r)/extra
+INSTALL_LOG_FILE=/var/log/axclhost-install.log
+
+CORES=$(nproc)
+ARCH=`dpkg --print-architecture`
+if [ "$ARCH" = "arm64" ]; then
+    ARCH=arm64
+    DRV_BUILT_PATH=/usr/src/axcl/out/axcl_linux_arm64/ko
+elif [ "$ARCH" = "riscv64" ]; then
+    ARCH=riscv
+    DRV_BUILT_PATH=/usr/src/axcl/out/axcl_linux_riscv/ko
+else
+    ARCH=x86
+    DRV_BUILT_PATH=/usr/src/axcl/out/axcl_linux_x86/ko
+fi
+
+unload_all_modules() {
+    if lsmod | grep -q "ax_pcie_p2p_rc"; then
+        modprobe -r ax_pcie_p2p_rc
+    fi
+
+    if lsmod | grep -q "axcl_host"; then
+        modprobe -r axcl_host
+    fi
+
+    if lsmod | grep -q "ax_pcie_mmb"; then
+        modprobe -r ax_pcie_mmb
+    fi
+
+    if lsmod | grep -q "ax_pcie_msg"; then
+        modprobe -r ax_pcie_msg
+    fi
+
+    if lsmod | grep -q "ax_pcie_host_dev"; then
+        modprobe -r ax_pcie_host_dev
+    fi
+
+    rm -f ${DRV_INSTALL_PATH}/ax*.ko
+}
+
+load_module() {
+    if ! modprobe $1; then
+        echo "\e[1;31mE: load module $1 fail. See dmesg for details.\e[0m"
+        unload_all_modules
+        exit 1
+    fi
+}
+
+
+case "$1" in
+    configure)
+        cd ${DRV_SOURCE_PATH}
+
+        # build driver
+        if ! make host=${ARCH} clean all install > ${INSTALL_LOG_FILE} 2>&1; then
+            echo "\e[1;31m"
+            echo "E: build driver fail, please check ${INSTALL_LOG_FILE}"
+            echo "E: remove by: dpkg --force-remove-reinstreq --purge axclhost"
+            echo "\e[0m"
+            exit 1
+        fi
+
+        # install driver
+        mkdir -p ${DRV_INSTALL_PATH}
+        cp -f ${DRV_BUILT_PATH}/ax*.ko ${DRV_INSTALL_PATH}
+
+        # update modules
+        depmod -a
+
+        # update so config
+        ldconfig
+
+        # insmod ko
+        load_module ax_pcie_host_dev
+        load_module ax_pcie_msg
+        load_module ax_pcie_mmb
+        load_module axcl_host
+        load_module ax_pcie_p2p_rc
+
+        set +e
+
+        AXCL_BIN_PATH=$(echo $PATH | grep -c '/usr/bin/axcl')
+        if [ $AXCL_BIN_PATH -eq 0 ]; then
+            echo "\e[1;31mNeed manual execute: source /etc/profile\e[0m"
+        fi
+
+        ;;
+    abort-upgrade|abort-remove|abort-deconfigure)
+        ;;
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
