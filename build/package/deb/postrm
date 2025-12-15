@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+# update so config
+ldconfig
+
+exit 0

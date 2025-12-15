@@ -1,0 +1,31 @@
+#!/bin/sh
+set +e
+
+
+unload_module() {
+    if lsmod | grep -q $1; then
+        modprobe -r $1
+    fi
+
+    if [ -f "/lib/modules/$(uname -r)/extra/$1.ko" ]; then
+        rm -f /lib/modules/$(uname -r)/extra/$1.ko
+    fi
+}
+
+# rmmod ko
+unload_module ax_pcie_p2p_rc
+unload_module axcl_host
+unload_module ax_pcie_mmb
+unload_module ax_pcie_msg
+unload_module ax_pcie_host_dev
+
+# delete driver
+rm -rf  /lib/modules/$(uname -r)/extra/ax*.ko
+
+rm -rf /usr/src/axcl/build/out
+rm -rf /usr/src/axcl/out
+
+# update modules
+depmod -a
+
+exit 0

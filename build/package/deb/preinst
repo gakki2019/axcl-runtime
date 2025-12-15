@@ -1,0 +1,36 @@
+#!/bin/sh
+
+set -e
+
+unload_module() {
+    if lsmod | grep -q $1; then
+        modprobe -r $1
+    fi
+
+    if [ -f "/lib/modules/$(uname -r)/extra/$1.ko" ]; then
+        rm -f /lib/modules/$(uname -r)/extra/$1.ko
+    fi
+}
+
+unload_module ax_pcie_p2p_rc
+unload_module axcl_host
+unload_module ax_pcie_mmb
+unload_module ax_pcie_msg
+unload_module ax_pcie_host_dev
+
+if [ -d "/usr/src/axcl" ]; then
+    rm -rf /usr/src/axcl
+fi
+
+# fix _apt privilege issue.
+# export APT_SANDBOX_USER=root
+apt_user="APT::Sandbox::User \"root\";"
+if [ -f "/etc/apt/apt.conf.d/10sandbox" ]; then
+    if ! grep -q "$apt_user" /etc/apt/apt.conf.d/10sandbox; then
+        echo "$apt_user" >> /etc/apt/apt.conf.d/10sandbox
+    fi
+else
+    echo "$apt_user" > /etc/apt/apt.conf.d/10sandbox
+fi
+
+exit 0
